@@ -3,12 +3,9 @@
   "version": "0.1.0",
   "description": "Node.js client for interracting with the Ringtail Deploy Service",
   "main": "index.js",
+  "repository": "fti-technology/ringtail-deploy-client",  
   "scripts": {
-    "test": "mocha"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bmancini55/ringtail-deploy-client"
+    "test": "grunt validate"
   },
   "keywords": [
     "ringtail deploy client"
