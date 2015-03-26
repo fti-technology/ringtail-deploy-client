@@ -72,7 +72,7 @@ Gets the status of an install as HTML
 client.status(next);
 ```
 
-Gets the installed builds information as HTML
+Gets the installed builds information as an array
 ```javascript
 client.installed(next);
 ```

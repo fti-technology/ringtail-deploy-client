@@ -230,11 +230,18 @@ describe('RingtailClient', function() {
   describe('.installed', function() {
     it('should make get request to installedUrl', function(done) {
       requestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
-      instance.install(function(err, result) {                
+      instance.installed(function(err, result) {                
         expect(requestStub.calledOnce).to.be.true;
-        expect(requestStub.getCall(0).args[0]).to.equal(instance.installUrl);
+        expect(requestStub.getCall(0).args[0].url).to.equal(instance.installedUrl);
         done();
       });      
+    });
+    it('should return an array of values', function(done) {
+      requestStub.onCall(0).yields(null, { statusCode: 200}, '"<p>Builds:</p><p>Something</p>"');
+      instance.installed(function(err, result) {                        
+        expect(result.length).to.equal(2);
+        done();
+      });
     });
   });
 
