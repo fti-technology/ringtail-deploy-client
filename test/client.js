@@ -146,7 +146,7 @@ describe('RingtailClient', function() {
     });
 
     it('should resolve if config value does match', function(done) {
-      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test=\"value\"</p>');           
+      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test=\\"value\\"</p>');           
       instance.setConfig('Common|Test', 'value', function(err, result) {             
         expect(result).to.equal('value');
         done();
@@ -154,7 +154,7 @@ describe('RingtailClient', function() {
     });
 
     it('should reject if config value doesn\'t match with status message', function(done) {
-      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test=\"old\"</p>');           
+      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test=\\"old\\"</p>');           
       instance.setConfig('Common|Test', 'value', function(err, result) {             
         expect(err).to.equal('Config value not set correctly: \'old\' expected to be \'value\'');
         done();
@@ -186,9 +186,9 @@ describe('RingtailClient', function() {
         'Common|Test2': 'test2',
         'Common|Test3': 'test3'
       };
-      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test1=\"test1\"</p>');
-      requestStub.onCall(1).yields(null, { statusCode: 200}, '<p>Common|Test2=\"test2\"</p>');
-      requestStub.onCall(2).yields(null, { statusCode: 200}, '<p>Common|Test3=\"test3\"</p>');
+      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test1=\\"test1\\"</p>');
+      requestStub.onCall(1).yields(null, { statusCode: 200}, '<p>Common|Test2=\\"test2\\"</p>');
+      requestStub.onCall(2).yields(null, { statusCode: 200}, '<p>Common|Test3=\\"test3\\"</p>');
       instance.setConfigs(configs, function(err, result) {                
         expect(requestStub.callCount).to.equal(3);        
         expect(requestStub.getCall(0).args[0]).to.equal('http://127.0.0.1:8080/api/config?key=Common%7CTest1&value=test1');
@@ -204,8 +204,8 @@ describe('RingtailClient', function() {
         'Common|Test2': 'test2',
         'Common|Test3': 'test3'
       };
-      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test1=\"test1\"</p>');
-      requestStub.onCall(1).yields(null, { statusCode: 200}, '<p>Common|Test2=\"old\"</p>');      
+      requestStub.onCall(0).yields(null, { statusCode: 200}, '<p>Common|Test1=\\"test1\\"</p>');
+      requestStub.onCall(1).yields(null, { statusCode: 200}, '<p>Common|Test2=\\"old\\"</p>');      
       instance.setConfigs(configs, function(err, result) {                
         expect(requestStub.callCount).to.equal(2);        
         expect(err).to.equal('Config value not set correctly: \'old\' expected to be \'test2\'');
