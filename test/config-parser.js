@@ -16,33 +16,28 @@ describe('config-parser', function() {
         ;
       expect(result).to.be.true;
     });
-
     it('should match valid KeyValue pairs with empty value', function() {
       var input   = 'Common|BRANCH=\\"\\"'
         , result  = configParser.keyValueRegex.test(input)
         ;
       expect(result).to.be.true;
     });
-
     it('should not match text', function() {
       var input  = 'some text'
         , result = configParser.keyValueRegex.test(input);
       expect(result).to.be.false;
     });
-
     it('should not match missing applications', function() {
       var input  = '|BRANCH=\\"main\\"'
         , result = configParser.keyValueRegex.test(input);
       expect(result).to.be.false;
     });
-
     it('should not match missing key', function() {
       var input   = 'Common|=\\"main\\"'
         , result  = configParser.keyValueRegex.test(input)
         ;
       expect(result).to.be.false;
     });
-
     it('should not match missing value', function() {
       var input   = 'Common|BRANCH'
         , result  = configParser.keyValueRegex.test(input)
@@ -66,6 +61,18 @@ describe('config-parser', function() {
       var result = configParser.parseLine(line);
       expect(result.key).to.equal('Common|BRANCH_NAME');
       expect(result.value).to.equal('MAIN');
+    });
+    it('should parse a line that has escaped quotes in it', function() {
+      var line = 'RingtailLegalApplicationServer|RINGTAILSTSCERTIFICATETHUMBPRINT=\\"\\"\\"\\"aa bb\\"\\"\\"\\"';
+      var result = configParser.parseLine(line);
+      expect(result.key).to.equal('RingtailLegalApplicationServer|RINGTAILSTSCERTIFICATETHUMBPRINT');
+      expect(result.value).to.equal('"""aa bb"""');
+    });
+    it('should parse a line that has escaped backslashes', function() {
+      var line = 'Common|RPFWORKERPATH=\\"\\\\\\\\allinone\\\\RPF_Workers\\"';
+      var result = configParser.parseLine(line);
+      expect(result.key).to.equal('Common|RPFWORKERPATH');
+      expect(result.value).to.equal('\\\\allinone\\RPF_Workers');
     });
   });
 
