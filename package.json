@@ -1,9 +1,9 @@
 {
   "name": "ringtail-deploy-client",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Node.js client for interracting with the Ringtail Deploy Service",
   "main": "index.js",
-  "repository": "fti-technology/ringtail-deploy-client",  
+  "repository": "fti-technology/ringtail-deploy-client",
   "scripts": {
     "test": "grunt validate"
   },
@@ -24,6 +24,7 @@
     "grunt-contrib-jshint": "^0.11.1",
     "grunt-mocha-test": "^0.12.7",
     "mocha": "^2.2.1",
+    "present": "0.0.6",
     "sinon": "^1.14.1"
   }
 }

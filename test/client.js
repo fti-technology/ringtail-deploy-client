@@ -2,6 +2,7 @@ var Q       = require('q')
   , mocha   = require('mocha')
   , sinon   = require('sinon')
   , chai    = require('chai')
+  , present = require('present')
   , expect  = chai.expect
 
   , poll    = require('../lib/poll')
@@ -250,11 +251,23 @@ describe('RingtailClient', function() {
     var fulfilledSpy;
 
     beforeEach(function() {      
-      fulfilledSpy = sinon.spy(poll.until, 'fulfilled');
+      fulfilledSpy = sinon.spy(poll.until, 'fulfilled');      
+      instance.installDelay = 1;
     });
 
     afterEach(function() {      
       fulfilledSpy.restore();
+    });
+
+    it('should delay upon start', function(done) {      
+      var start = present();
+      instance.installDelay = 500;
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'UPGRADE COMPLETE');
+      instance.waitForInstall(null, function(err, result) {        
+        var end = present();
+        expect(end - start).to.be.gte(500);
+        done();
+      }); 
     });
 
     it('should make get request to statusUrl', function(done) {
