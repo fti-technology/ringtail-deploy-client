@@ -29,3 +29,5 @@ node_modules
 
 # Exclude Apple stuff
 .DS_Store
+
+test.js
