@@ -57,6 +57,11 @@ Gets the configurations as HTML
 client.getConfigs(next);
 ```
 
+Gets the launch keys as HTML from a drop location.
+```javascript
+client.getLaunchKeys(dropLocation);
+```
+
 Starts the installation
 ```javascript
 client.install(next);
