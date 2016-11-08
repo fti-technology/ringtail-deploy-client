@@ -111,6 +111,18 @@ describe('RingtailClient', function() {
   });
 
 
+  describe('.setUpdatePath', function() {
+    it('should make a request to setUpdatePathUrl', function(done) {
+      var value = '\\\\testPath';
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
+      instance.setUpdatePath(value, function() {        
+        expect(requestStub.calledOnce).to.be.true;
+        expect(requestStub.getCall(0).args[0]).to.equal(instance.updateUrl + '?value=' + '%5C%5CtestPath');
+        done();
+      }); 
+    });
+  });
+
   describe('.update', function() {
     it('should make a request to updateUrl', function(done) {
       requestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
@@ -121,7 +133,7 @@ describe('RingtailClient', function() {
         done();
       }); 
     });
-  });
+  });  
 
 
   describe('.status', function() {    
