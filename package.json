@@ -1,6 +1,6 @@
 {
   "name": "ringtail-deploy-client",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Node.js client for interracting with the Ringtail Deploy Service",
   "main": "index.js",
   "repository": "fti-technology/ringtail-deploy-client",
