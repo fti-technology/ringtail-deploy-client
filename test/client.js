@@ -117,7 +117,7 @@ describe('RingtailClient', function() {
       requestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.setUpdatePath(value, function() {        
         expect(requestStub.calledOnce).to.be.true;
-        expect(requestStub.getCall(0).args[0]).to.equal(instance.updateUrl + '?value=' + '%5C%5CtestPath');
+        expect(requestStub.getCall(0).args[0]).to.equal(instance.updateUrl + '?value=' + value);
         done();
       }); 
     });
