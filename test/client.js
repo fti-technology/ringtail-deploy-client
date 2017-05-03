@@ -110,6 +110,27 @@ describe('RingtailClient', function() {
     });
   });
 
+  describe('.waitForServiceLimited', function() {
+    var fulfilledSpy;
+
+    beforeEach(function() {        
+      fulfilledSpy = sinon.spy(poll.until, 'fulfilled');
+    });
+
+    afterEach(function() {
+      fulfilledSpy.restore();
+    });
+
+    it('should make get request to statusUrl', function(done) {
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
+      instance.waitForServiceLimited(50, function(err, result) {        
+        expect(requestStub.calledOnce).to.be.true;
+        expect(requestStub.getCall(0).args[0].url).to.equal(instance.statusUrl);
+        done();
+      });      
+    });
+  });  
+
 
   describe('.setUpdatePath', function() {
     it('should make a request to setUpdatePathUrl', function(done) {
