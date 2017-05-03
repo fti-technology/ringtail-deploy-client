@@ -110,6 +110,27 @@ describe('RingtailClient', function() {
     });
   });
 
+  describe('.waitForServiceLimited', function() {
+    var fulfilledSpy;
+
+    beforeEach(function() {        
+      fulfilledSpy = sinon.spy(poll.until, 'fulfilled');
+    });
+
+    afterEach(function() {
+      fulfilledSpy.restore();
+    });
+
+    it('should make get request to statusUrl', function(done) {
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
+      instance.waitForServiceLimited(50, function(err, result) {        
+        expect(requestStub.calledOnce).to.be.true;
+        expect(requestStub.getCall(0).args[0].url).to.equal(instance.statusUrl);
+        done();
+      });      
+    });
+  });  
+
 
   describe('.setUpdatePath', function() {
     it('should make a request to setUpdatePathUrl', function(done) {
@@ -353,5 +374,107 @@ describe('RingtailClient', function() {
       });
     });    
   });
+
+  describe('.validate', function() {
+    it('should make get request to installDiagnositcUrl', function(done) {
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
+      instance.validate(function(err, result) {                
+        expect(requestStub.calledOnce).to.be.true;
+        expect(requestStub.getCall(0).args[0]).to.equal(instance.installDiagnositcUrl);
+        done();
+      });      
+    });
+  });  
+
+  describe('.waitForValidate', function() {
+    var fulfilledSpy;
+
+    beforeEach(function() {      
+      fulfilledSpy = sinon.spy(poll.until, 'fulfilled');      
+      instance.installDelay = 1;
+      instance.installDiagnosticDelay = 1;
+      instance.installDiagnosticTimeout = 100;
+      instance.pollIntervalDiagnostic = 10;
+    });
+
+    afterEach(function() {      
+      fulfilledSpy.restore();
+    });
+
+    it('should delay upon start', function(done) {      
+      var start = present();
+      instance.installDelay = 500;
+      instance.installDiagnosticDelay = 100;
+      instance.installDiagnosticTimeout = 100;
+      instance.pollIntervalDiagnostic = 100;
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'UPGRADE COMPLETE');
+      instance.waitForValidate(null, function(err, result) {        
+        var end = present();
+        expect(end - start).to.be.gte(100);
+        done();
+      }); 
+    });
+
+    it('should make get request to installDiagnositcResultUrl', function(done) {
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'UPGRADE COMPLETE');
+      instance.waitForValidate(null, function(err, result) {        
+        expect(requestStub.calledOnce).to.be.true;
+        expect(requestStub.getCall(0).args[0].url).to.equal(instance.installDiagnositcResultUrl);
+        done();
+      });      
+    });
+
+    it('should use wait logic', function(done) {      
+      requestStub.onCall(0).yields(null, { statusCode: 200}, 'UPGRADE COMPLETE');            
+      instance.waitForValidate(null, function(err, result) {
+        expect(fulfilledSpy.calledOnce).to.be.true;
+        done();
+      });
+    });
+
+    it('should retry on errors', function(done) {
+      instance.pollInterval = 1;      
+      requestStub.onCall(0).yields('Error', null, null);
+      requestStub.onCall(1).yields(null, { statusCode: 200}, 'UPGRADE COMPLETE');            
+      instance.waitForValidate(null, function(err, result) {
+        expect(result).to.equal('UPGRADE COMPLETE');
+        done();
+      });
+    });  
+
+    it('should retry until UPGRADE COMPLETE', function(done) {
+      instance.pollInterval = 1;      
+      requestStub.onCall(0).yields('Error', null, null);
+      requestStub.onCall(1).yields(null, { statusCode: 200}, '');            
+      requestStub.onCall(2).yields(null, { statusCode: 200}, 'UPGRADE COMPLETE');            
+      instance.waitForValidate(null, function(err, result) {
+        expect(result).to.equal('UPGRADE COMPLETE');
+        done();
+      });
+    });  
+
+    it('should retry until UPGRADE SUCCESSFUL', function(done) {
+      instance.pollInterval = 1;      
+      requestStub.onCall(0).yields('Error', null, null);
+      requestStub.onCall(1).yields(null, { statusCode: 200}, '');            
+      requestStub.onCall(2).yields(null, { statusCode: 200}, 'UPGRADE SUCCESSFUL');            
+      instance.waitForValidate(null, function(err, result) {
+        expect(result).to.equal('UPGRADE SUCCESSFUL');
+        done();
+      });
+    });  
+
+    it('should retry until UPGRADE ABORTED and have error', function(done) {
+      instance.pollInterval = 1;      
+      requestStub.onCall(0).yields('Error', null, null);
+      requestStub.onCall(1).yields(null, { statusCode: 200}, '');            
+      requestStub.onCall(2).yields(null, { statusCode: 200}, 'UPGRADE ABORTED');            
+      instance.waitForValidate(null, function(err, result) {
+        expect(err.message).to.equal('UPGRADE ABORTED');
+        done();
+      });
+    });    
+  });
+
 
 });
