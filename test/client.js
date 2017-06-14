@@ -27,6 +27,7 @@ describe('RingtailClient', function() {
 
   afterEach(function() {
     getRequestStub.restore();
+    postRequestStub.restore();
   });
 
 
