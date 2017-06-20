@@ -6,7 +6,8 @@
   "repository": "fti-technology/ringtail-deploy-client",
   "scripts": {
     "lint": "eslint .",
-    "test": "node_modules/.bin/_mocha --recursive test"
+    "test": "node_modules/.bin/_mocha --recursive test",
+    "test:watch": "node_modules/.bin/_mocha --recursive test -w"
   },
   "keywords": [
     "ringtail deploy client"

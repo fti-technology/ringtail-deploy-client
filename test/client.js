@@ -55,6 +55,10 @@ describe('RingtailClient', function() {
     it('should create the setMasterConfigUrl', function() {
       expect(instance.setMasterConfigUrl).to.equal('http://127.0.0.1:8080/api/UpdateServiceConfig/Update');
     });
+
+    it('should create the isRunningUrl', function() {
+      expect(instance.isRunningUrl).to.equal('http://127.0.0.1:8080/api/IsRunning');
+    });
   });
 
 
@@ -175,7 +179,7 @@ describe('RingtailClient', function() {
     });
   });
 
-
+  
   describe('.setConfig', function() {
     it('should make get request to configUrl', function(done) {
       getRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
@@ -498,6 +502,18 @@ describe('RingtailClient', function() {
         done();
       });
     });    
+  });
+
+  describe('.isJobRunning', function() {    
+    it('should make a get request to isRunningUrl', function(done) {
+      getRequestStub.onCall(0).yields(null, { statusCode: 200}, false);
+      instance.isJobRunning(function(err, result) {
+        expect(getRequestStub.calledOnce).to.be.true;
+        expect(getRequestStub.getCall(0).args[0].url).to.equal(instance.isRunningUrl);
+        expect(result).to.be.false;
+        done();
+      });
+    });
   });
 
 
