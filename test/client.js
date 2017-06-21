@@ -512,6 +512,17 @@ describe('RingtailClient', function() {
         done();
       });
     });
+
+    it('should make a get request to a bad url', function(done) {
+      instance.isRunningUrl = 'http://127.0.0.1:8080/api/IsRunningBadUrl';
+      getRequestStub.onCall(0).yields(null, { statusCode: 200}, false);
+      instance.isJobRunning(function(err, result) {
+        expect(getRequestStub.calledOnce).to.be.true;
+        expect(getRequestStub.getCall(0).args[0].url).to.equal(instance.isRunningUrl);
+        expect(result).to.be.false;
+        done();
+      });
+    });
   });
 
 });
