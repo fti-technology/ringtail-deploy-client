@@ -514,5 +514,4 @@ describe('RingtailClient', function() {
     });
   });
 
-
 });
