@@ -56,6 +56,10 @@ describe('RingtailClient', function() {
       expect(instance.setMasterConfigUrl).to.equal('http://127.0.0.1:8080/api/UpdateServiceConfig/Update');
     });
 
+    it('should create the setMasterConfigUrl', function() {
+      expect(instance.setDeploymentConfigUrl).to.equal('http://127.0.0.1:8080/api/UpdateDeploymentConfig/Update');
+    });
+
     it('should create the isRunningUrl', function() {
       expect(instance.isRunningUrl).to.equal('http://127.0.0.1:8080/api/IsRunning');
     });
@@ -268,9 +272,26 @@ describe('RingtailClient', function() {
       postRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.setMasterCredentials(credentials, function(err, result) {
         expect(postRequestStub.callCount).to.equal(1);
-        expect(postRequestStub.getCall(0).args[0]).to.equal('http://127.0.0.1:8080/api/UpdateServiceConfig/Update');
-        expect(postRequestStub.getCall(0).args[1].form.MasterRunnerUser).to.equal('testUser');
-        expect(postRequestStub.getCall(0).args[1].form.MasterRunnerPass).to.equal('testPass');
+        expect(postRequestStub.getCall(0).args[0].uri).to.equal('http://127.0.0.1:8080/api/UpdateServiceConfig/Update');
+        expect(postRequestStub.getCall(0).args[0].json.MasterRunnerUser).to.equal('testUser');
+        expect(postRequestStub.getCall(0).args[0].json.MasterRunnerPass).to.equal('testPass');
+        done();
+      });
+    });
+  });
+
+  describe('.setDeploymentConfig', function() {
+    var config = {
+      'Common|BRANCH_NAME': 'Main',
+      'Common|FILE_DELETIONS': ''
+    };
+    it('should make a post request to setDeploymentConfigUrl with the config fields', function(done) {
+      postRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
+      instance.setDeploymentConfig(config, function(err, result) {
+        expect(postRequestStub.callCount).to.equal(1);
+        expect(postRequestStub.getCall(0).args[0].uri).to.equal('http://127.0.0.1:8080/api/UpdateDeploymentConfig/Update');
+        expect(postRequestStub.getCall(0).args[0].json['Common|BRANCH_NAME']).to.equal('Main');
+        expect(postRequestStub.getCall(0).args[0].json['Common|FILE_DELETIONS']).to.equal('');
         done();
       });
     });
