@@ -52,6 +52,10 @@ describe('RingtailClient', function() {
       expect(instance.installedUrl).to.equal('http://127.0.0.1:8080/api/installedBuilds');
     });
 
+    it('should create the existingConfigsUrl', function() {
+      expect(instance.existingConfigsUrl).to.equal('http://127.0.0.1:8080/api/ExistingConfiguration');
+    });    
+
     it('should create the setMasterConfigUrl', function() {
       expect(instance.setMasterConfigUrl).to.equal('http://127.0.0.1:8080/api/UpdateServiceConfig/Update');
     });
@@ -158,6 +162,29 @@ describe('RingtailClient', function() {
       }); 
     });
   });
+
+  describe('.getExistingConfigs', function() {
+    it('should make a request to existingConfigsUrl and parse array', function(done) {
+      getRequestStub.onCall(0).yields(null, {statusCode: 200}, '[[{"Key":"someKey", "Value": "SomeValue"}]]');
+      instance.getExistingConfigs(function(err, result) {
+        expect(getRequestStub.calledOnce).to.be.true;
+        expect(result['someKey'] === 'SomeValue');
+        done();
+      }); 
+    });
+  });  
+
+  describe('.getExistingConfigs', function() {
+    it('should make a request to existingConfigsUrl and parse object', function(done) {
+      getRequestStub.onCall(0).yields(null, {statusCode: 200}, '[{"Key":"someKey", "Value": "SomeValue"}]');
+      instance.getExistingConfigs(function(err, result) {
+        expect(getRequestStub.calledOnce).to.be.true;
+        expect(result['someKey'] === 'SomeValue');
+        done();
+      }); 
+    });
+  });  
+
 
   describe('.update', function() {
     it('should make a request to updateUrl', function(done) {
