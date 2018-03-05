@@ -157,7 +157,7 @@ describe('RingtailClient', function() {
       getRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.setUpdatePath(value, function() {        
         expect(getRequestStub.calledOnce).to.be.true;
-        expect(getRequestStub.getCall(0).args[0]).to.equal(instance.updateUrl + '?value=' + value);
+        expect(getRequestStub.getCall(0).args[0].url).to.equal(instance.updateUrl + '?value=' + value);
         done();
       }); 
     });
@@ -192,7 +192,7 @@ describe('RingtailClient', function() {
       instance.updateDelay = 1;
       instance.update(function() {        
         expect(getRequestStub.calledOnce).to.be.true;
-        expect(getRequestStub.getCall(0).args[0]).to.equal(instance.updateUrl);
+        expect(getRequestStub.getCall(0).args[0].url).to.equal(instance.updateUrl);
         done();
       }); 
     });
@@ -216,7 +216,7 @@ describe('RingtailClient', function() {
       getRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.setConfig('Common|Test', 'value', function(err, result) {                
         expect(getRequestStub.calledOnce).to.be.true;
-        expect(getRequestStub.getCall(0).args[0]).to.equal(instance.configUrl + '?key=Common%7CTest&value=value');
+        expect(getRequestStub.getCall(0).args[0].url).to.equal(instance.configUrl + '?key=Common%7CTest&value=value');
         done();
       });      
     });
@@ -267,9 +267,9 @@ describe('RingtailClient', function() {
       getRequestStub.onCall(2).yields(null, { statusCode: 200}, '<p>Common|Test3=\\"test3\\"</p>');
       instance.setConfigs(configs, function(err, result) {                
         expect(getRequestStub.callCount).to.equal(3);        
-        expect(getRequestStub.getCall(0).args[0]).to.equal('http://127.0.0.1:8080/api/config?key=Common%7CTest1&value=test1');
-        expect(getRequestStub.getCall(1).args[0]).to.equal('http://127.0.0.1:8080/api/config?key=Common%7CTest2&value=test2');
-        expect(getRequestStub.getCall(2).args[0]).to.equal('http://127.0.0.1:8080/api/config?key=Common%7CTest3&value=test3');
+        expect(getRequestStub.getCall(0).args[0].url).to.equal('http://127.0.0.1:8080/api/config?key=Common%7CTest1&value=test1');
+        expect(getRequestStub.getCall(1).args[0].url).to.equal('http://127.0.0.1:8080/api/config?key=Common%7CTest2&value=test2');
+        expect(getRequestStub.getCall(2).args[0].url).to.equal('http://127.0.0.1:8080/api/config?key=Common%7CTest3&value=test3');
         done();
       });      
     });
@@ -299,7 +299,7 @@ describe('RingtailClient', function() {
       postRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.setMasterCredentials(credentials, function(err, result) {
         expect(postRequestStub.callCount).to.equal(1);
-        expect(postRequestStub.getCall(0).args[0].uri).to.equal('http://127.0.0.1:8080/api/UpdateServiceConfig/Update');
+        expect(postRequestStub.getCall(0).args[0].url).to.equal('http://127.0.0.1:8080/api/UpdateServiceConfig/Update');
         expect(postRequestStub.getCall(0).args[0].json.MasterRunnerUser).to.equal('testUser');
         expect(postRequestStub.getCall(0).args[0].json.MasterRunnerPass).to.equal('testPass');
         done();
@@ -316,7 +316,7 @@ describe('RingtailClient', function() {
       postRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.setDeploymentConfig(config, function(err, result) {
         expect(postRequestStub.callCount).to.equal(1);
-        expect(postRequestStub.getCall(0).args[0].uri).to.equal('http://127.0.0.1:8080/api/UpdateDeploymentConfig/Update');
+        expect(postRequestStub.getCall(0).args[0].url).to.equal('http://127.0.0.1:8080/api/UpdateDeploymentConfig/Update');
         expect(postRequestStub.getCall(0).args[0].json['Common|BRANCH_NAME']).to.equal('Main');
         expect(postRequestStub.getCall(0).args[0].json['Common|FILE_DELETIONS']).to.equal('');
         done();
@@ -330,7 +330,7 @@ describe('RingtailClient', function() {
       getRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.install(function(err, result) {                
         expect(getRequestStub.calledOnce).to.be.true;
-        expect(getRequestStub.getCall(0).args[0]).to.equal(instance.installUrl);
+        expect(getRequestStub.getCall(0).args[0].url).to.equal(instance.installUrl);
         done();
       });      
     });
@@ -456,7 +456,7 @@ describe('RingtailClient', function() {
       getRequestStub.onCall(0).yields(null, { statusCode: 200}, 'success');
       instance.validate(function(err, result) {                
         expect(getRequestStub.calledOnce).to.be.true;
-        expect(getRequestStub.getCall(0).args[0]).to.equal(instance.installDiagnositcUrl);
+        expect(getRequestStub.getCall(0).args[0].url).to.equal(instance.installDiagnositcUrl);
         done();
       });      
     });
